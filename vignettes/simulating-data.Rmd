@@ -79,11 +79,15 @@ locations <- c("A", "B", "C")
 pmat <- matrix(0, nrow = 3, ncol = 3)
 diag(pmat) <- 1
 ## Initial Rt in the three locations
-r_init <- rep(1.2, 3)
+r_init <- matrix(rep(1.2, 3), nrow = 1, ncol = 3)
 ## Initial incidence, start with a large seed so that the epidemic can
 ## take off.
-incid_init <- rep(20, 3)
+incid_init <- matrix(rep(20, 3), nrow = 1, ncol = 3)
+## Made-up SI
+si <- c(0.1, 0.2, 0.3, 0.2, 0.2)
+
 no_movement <- spatial_project(
-  x, R, si, pmovement, n_sim = 100, n_days = 7, model = "poisson"
+  incid_init, r_init, si, pmat, n_sim = 10, n_days = 7, model = "poisson"
 )
+
 ```

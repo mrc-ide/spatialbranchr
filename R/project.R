@@ -29,8 +29,8 @@
 ##' The dimensions of the returned array are
 ##' n_days X n_locations X n_sim
 ##' @author Sangeeta Bhatia, Anne Cori, Pierre Nouvellet
-##' @importFrom("stats", "rpois")
-##' @importFrom("utils", "tail")
+##' @importFrom stats rpois
+##' @importFrom utils tail
 spatial_project <- function(x, R, si, pmovement, n_sim, n_days,
                             model = "poisson") {
   model <- match.arg(model)
@@ -79,7 +79,7 @@ spatial_project <- function(x, R, si, pmovement, n_sim, n_days,
       w_t <- utils::tail(ws, i)
       r_t <- R[i - start + 1, ]
       mu <- force_of_infection(i_t, r_t, w_t, pmovement)
-      out[i, , sim] <- rpois(n_loc, mu)
+      out[i - nrow(x), , sim] <- rpois(n_loc, mu)
     }
   }
   out
