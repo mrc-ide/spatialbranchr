@@ -25,11 +25,14 @@
 ##' @param n_sim The number of epicurves to simulate. Defaults to 100.
 ##' @param n_days projection horizon. Defaults to 7.
 ##' @param model Currently only "poisson" is supported
-##' @return
+##' @return an array conatining the projected incidence.
+##' The dimensions of the returned array are
+##' n_days X n_locations X n_sim
 ##' @author Sangeeta Bhatia, Anne Cori, Pierre Nouvellet
+##' @importFrom("stats", "rpois")
+##' @importFrom("utils", "tail")
 spatial_project <- function(x, R, si, pmovement, n_sim, n_days,
                             model = "poisson") {
-
   model <- match.arg(model)
   ## TODO Checks
   ## Check dimensions of x
@@ -42,12 +45,41 @@ spatial_project <- function(x, R, si, pmovement, n_sim, n_days,
   ## Check that pmovement is non-negative
   ## Check that n_sim is an integer
   ## Check that n_days is an integer
-  n_locations <- ncol(x)
-  out <- array(NA, dim = c(n_days, n_locations, n_sim))
+  if (ncol(R) != ncol(x)) {
+    stop("R should be a either a 1 X N or T X N matrix.")
+  }
+  if (nrow(R) != nrow(x)) {
+    if (nrow(R) != 1) {
+      stop("R should be a either a 1 X N or T X N
+                  matrix.")
+    }
+  }
+
+  n_loc <- ncol(x)
+  out <- array(0, dim = c(n_days, n_loc, n_sim))
+  start <- nrow(x) + 1
+  end <- nrow(x) + n_days
+
+  if (nrow(R) == 1) {
+    R <- matrix(R,
+      nrow = end - start + 1,
+      ncol = n_loc, byrow = TRUE
+    )
+  }
+  if (length(si) < end) {
+    ws <- rev(c(si, rep(0, end - length(si))))
+  } else {
+    ws <- rev(si)
+  }
+
   for (sim in seq_len(n_sim)) {
-    for (time in seq_len(n_days)) {
-      foi <- force_of_infection()
-      out[time, , sim] <- stats::rpois()
+    out_local <- rbind(x, out[, , sim])
+    for (i in start:end) {
+      i_t <- out_local[1:i, ]
+      w_t <- utils::tail(ws, i)
+      r_t <- R[i - start + 1, ]
+      mu <- force_of_infection(i_t, r_t, w_t, pmovement)
+      out[i, , sim] <- rpois(n_loc, mu)
     }
   }
   out
