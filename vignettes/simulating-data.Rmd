@@ -1,0 +1,89 @@
+---
+title: "Simulating outbreaks under a spatially explicit branching process"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{simulating-data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(spatialbranchr)
+library(ggplot2)
+```
+
+The model implemented in `spatialbranchr` 
+relies on a well-established statistical framework that
+assumes the daily incidence, \(I_t\) , can be approximated with a
+Poisson process following the renewal equation \cite{fraser2007estimating}:
+
+\begin{equation}
+I_{t} \sim 
+  Pois\left( 
+  R^{t} \sum_{s = 1}^{t}{I_{i}^{t - s} \omega_{s}}
+  \right).
+  \label{eq:likelihood1}
+\end{equation}
+
+Here \(R^t\) is the reproduction number at time \(t\) (the average
+number of secondary cases per infected individual) and \(\omega\) is the
+distribution of the serial interval (the time between onset of symptoms
+in a case and their infector).
+
+We extend this model to incorporate the spatial spread of the outbreak
+between \(n\) different locations. We assume that the number of incident cases at a
+location $j$ at time $t$ is given by the equation
+
+\begin{equation}
+I_{j}^{t} \sim Pois\left( \Lambda_{j}^{t} \right), 
+\label{eq:likelihood2}
+\end{equation}
+
+where $\Lambda_{j}^{t}$ is the total infectivity at a location $j$ at
+time $t$. $\Lambda_{j}^{t}$ is
+the sum of infectivity at all locations weighted by the relative flow of
+cases into $j$ from each location $i$. That is, 
+
+\begin{equation}
+\Lambda_{j}^{t} = \sum_{i = 1}^{n} 
+  {\left( p_{i \rightarrow j}
+  R_{i}^{t} \sum_{s = 1}^{t}{I_{i}^{t - s} \omega_{s}}
+  \right)}.
+\label{eq:biglambda}
+\end{equation}
+
+$R_{i}^{t}$ is the reproduction number at location $i$ at time $t$
+and $p_{i \rightarrow j}$ is the probability of a case moving from
+location $i$ to location $j$ while they are infectious. \(\omega\) is
+the typical infectiousness profile of a case over time after
+infection. 
+
+We illustrate the model by simulating incidence for three locations
+under various assumptions of population movement between the three places.
+
+## No movement
+
+If we don't allow any movement between the three locations, we are in
+effect simulating three independent outbreaks.
+
+```{r}
+locations <- c("A", "B", "C")
+## Movement matrix, all off-diagonal elemnets are 0.
+pmat <- matrix(0, nrow = 3, ncol = 3)
+diag(pmat) <- 1
+## Initial Rt in the three locations
+r_init <- rep(1.2, 3)
+## Initial incidence, start with a large seed so that the epidemic can
+## take off.
+incid_init <- rep(20, 3)
+no_movement <- spatial_project(
+  x, R, si, pmovement, n_sim = 100, n_days = 7, model = "poisson"
+)
+```

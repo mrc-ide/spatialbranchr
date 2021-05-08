@@ -13,3 +13,7 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/sangeetabhatia03/spatialbranchr
 BugReports: https://github.com/sangeetabhatia03/spatialbranchr/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
