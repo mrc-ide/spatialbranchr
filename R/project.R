@@ -30,4 +30,25 @@
 spatial_project <- function(x, R, si, pmovement, n_sim, n_days,
                             model = "poisson") {
 
+  model <- match.arg(model)
+  ## TODO Checks
+  ## Check dimensions of x
+  ## Check that x has only integers.
+  ## Check dimensions of R.
+  ## Check that R is non-negative
+  ## Check dimensions of si
+  ## Check that si is non-negative and that si[0] = 0 as in EpiEstim
+  ## Check dimensions of pmovement.
+  ## Check that pmovement is non-negative
+  ## Check that n_sim is an integer
+  ## Check that n_days is an integer
+  n_locations <- ncol(x)
+  out <- array(NA, dim = c(n_days, n_locations, n_sim))
+  for (sim in seq_len(n_sim)) {
+    for (time in seq_len(n_days)) {
+      foi <- force_of_infection()
+      out[time, , sim] <- stats::rpois()
+    }
+  }
+  out
 }
