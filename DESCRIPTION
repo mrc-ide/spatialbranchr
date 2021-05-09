@@ -1,14 +1,13 @@
 Package: spatialbranchr
-Title: What the Package Does (One Line, Title Case)
+Title: Spatially explicit branching process model
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: What license it uses
+   c(person(given = "Pierre", family = "Nouvellet", role = "aut", email = "p.nouvellet@imperial.ac.uk"),
+     person(given = "Anne", family = "cori", role = "aut", email = "a.cori@imperial.ac.uk"),
+    person(given = "Sangeeta", family = "Bhatia", role = c("aut", "cre"), email = "s.bhatia@imperial.ac.uk", comment = c(ORCID = "0000-0001-6525-101X"))
+    )
+Description: spatialbranchr implements a spatially explicit branching process model.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/sangeetabhatia03/spatialbranchr
