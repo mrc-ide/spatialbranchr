@@ -90,17 +90,7 @@ no_movement <- spatial_project(
   incid_init, r_init, si, pmat, n_sim = 200, n_days = 100, model = "poisson"
 )
 
-no_movement_df <- data.frame(no_movement[, , 1])
-no_movement_df$sim <- 1
-no_movement_df$day <- 1:100
-
-for (i in 2:20) {
-  x <- data.frame(no_movement[, , i])
-  x$sim <- i
-  x$day <- 1:100
-  no_movement_df <- rbind(no_movement_df, x)
-}
-
-wide <- tidyr::gather(no_movement_df, location, incid, -sim, -day)
+no_movement_df <- as_dataframe(no_movement)
+tall <- tidyr::gather(no_movement_df, location, incid, -sim, -day)
 
 ```
