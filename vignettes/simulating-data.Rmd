@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(spatialbranchr)
 library(ggplot2)
+library(tidyr)
 ```
 
 The model implemented in `spatialbranchr` 
@@ -79,18 +80,25 @@ locations <- c("A", "B", "C")
 pmat <- matrix(0, nrow = 3, ncol = 3)
 diag(pmat) <- 1
 ## Initial Rt in the three locations
-r_init <- matrix(rep(1.2, 3), nrow = 1, ncol = 3)
+r_init <- matrix(rep(20, 3), nrow = 1, ncol = 3)
 ## Initial incidence, start with a large seed so that the epidemic can
 ## take off.
 incid_init <- matrix(rep(20, 3), nrow = 1, ncol = 3)
 ## Made-up SI
-si <- c(0.05, 0.05, 0.1, 0.2, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05, 0.05)
+si <- Flu2009$si_distr
 
 no_movement <- spatial_project(
-  incid_init, r_init, si, pmat, n_sim = 200, n_days = 100, model = "poisson"
+  incid_init, r_init, si, pmat, n_sim = 200, n_days = 100,
+  model = "poisson"
 )
 
 no_movement_df <- as_dataframe(no_movement)
-tall <- tidyr::gather(no_movement_df, location, incid, -sim, -day)
+tall <- gather(no_movement_df, location, incid, -sim, -day)
+```
+
+```{r}
+ggplot(tall) +
+  geom_line(aes(day, incid, group = sim), alpha = 0.3) +
+  facet_wrap(~location, nrow = 3)
 
 ```
