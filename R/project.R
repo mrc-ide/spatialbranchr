@@ -56,7 +56,7 @@ spatial_project <- function(x, R, si, pmovement, n_sim, n_days,
   }
 
   n_loc <- ncol(x)
-  out <- array(0, dim = c(n_days, n_loc, n_sim))
+  out <- vector(mode = "list", length = n_sim)
   start <- nrow(x) + 1
   end <- nrow(x) + n_days
 
@@ -73,14 +73,22 @@ spatial_project <- function(x, R, si, pmovement, n_sim, n_days,
   }
 
   for (sim in seq_len(n_sim)) {
-    out_local <- rbind(x, out[, , sim])
+    out_local <- rbind(x, matrix(0, nrow = n_days, ncol = n_loc))
     for (i in start:end) {
       i_t <- out_local[1:i, ]
       w_t <- utils::tail(ws, i)
       r_t <- R[i - start + 1, ]
       mu <- force_of_infection(i_t, r_t, w_t, pmovement)
-      out[i - nrow(x), , sim] <- rpois(n_loc, mu)
+      out_local[i - nrow(x), ] <- rpois(n_loc, mu)
     }
+    out[[sim]] <- out_local
   }
-  out
+  ## Set-up as an array
+  out_array <- array(
+    0, dim = c(nrow(out_local), ncol(out_local), n_sim)
+  )
+  for (sim in seq_len(n_sim)) {
+    out_array[, , sim] <- out[[sim]]
+  }
+  out_array
 }
