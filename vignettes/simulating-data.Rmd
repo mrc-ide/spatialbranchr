@@ -88,7 +88,7 @@ incid_init <- matrix(rep(20, 3), nrow = 1, ncol = 3)
 si <- EpiEstim::discr_si(k = 0:30, mu = 6, sigma = 4)
 
 no_movement <- spatial_project(
-  incid_init, r_init, si, pmat, n_sim = 1000, n_days = 100,
+  incid_init, r_init, si, pmat, n_sim = 1000, n_days = 30,
   model = "poisson"
 )
 
@@ -98,7 +98,35 @@ tall <- gather(no_movement_df, location, incid, -sim, -day)
 ```
 
 ```{r}
+
 ggplot(tall) +
   geom_line(aes(day, incid, group = sim), alpha = 0.3) +
   facet_wrap(~location, nrow = 3)
+
+```
+
+## Allow movement
+
+We will now modify the probability of movement to allow for some
+movement between locations.
+
+```{r}
+puni <- matrix(
+  c(0.8, 0.1, 0.1, 0.2, 0.3, 0.5, 0.3, 0.3, 0.4), nrow = 3, ncol = 3
+)
+uni_movement <- spatial_project(
+  incid_init, r_init, si, puni, n_sim = 1000, n_days = 30,
+  model = "poisson"
+)
+
+uni_movement <- as_dataframe(uni_movement)
+tall <- gather(uni_movement, location, incid, -sim, -day)
+
+```
+
+```{r}
+ggplot(tall) +
+  geom_line(aes(day, incid, group = sim), alpha = 0.3) +
+  facet_wrap(~location, nrow = 3)
+
 ```
