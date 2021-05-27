@@ -2,6 +2,8 @@
 
 export(as_dataframe)
 export(force_of_infection)
+export(sd2)
 export(spatial_project)
+export(summarise_projections)
 importFrom(stats,rpois)
 importFrom(utils,tail)

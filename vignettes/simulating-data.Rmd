@@ -120,7 +120,7 @@ uni_movement <- spatial_project(
 )
 
 uni_movement <- as_dataframe(uni_movement)
-tall <- gather(uni_movement, location, incid, -sim, -day)
+tall_uni <- gather(uni_movement, location, incid, -sim, -day)
 
 ```
 
