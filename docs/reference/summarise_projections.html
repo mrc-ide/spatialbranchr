@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • spatialbranchr</title>
+<title>Summarise projections across simulations — summarise_projections • spatialbranchr</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Summarise projections across simulations — summarise_projections" />
+<meta property="og:description" content="Extract summary statistics for projections" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -117,79 +118,59 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Summarise projections across simulations</h1>
+    <small class="dont-index">Source: <a href='https://github.com/sangeetabhatia03/spatialbranchr/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
+    <div class="hidden name"><code>summarise_projections.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Extract summary statistics for projections</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>summarise_projections</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  funs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>quantile <span class='op'>=</span> <span class='va'>quantile</span>, min <span class='op'>=</span> <span class='va'>min</span>, max <span class='op'>=</span> <span class='va'>max</span>, mean <span class='op'>=</span> <span class='va'>mean</span>, sd <span class='op'>=</span> <span class='va'>sd2</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="as_dataframe.html">as_dataframe()</a></code> </p>
-        </td>
-        <td><p>Convert the projections to a data.frame</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="force_of_infection.html">force_of_infection()</a></code> </p>
-        </td>
-        <td><p>Force of infection under a spatially explicit brancing process model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_rindex.html">make_rindex()</a></code> </p>
-        </td>
-        <td><p>Prepare index matrix for Rt</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sd2.html">sd2()</a></code> </p>
-        </td>
-        <td><p>Standard deviation with optional args</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="spatial_estimater.html">spatial_estimater()</a></code> </p>
-        </td>
-        <td><p>Estimate effective reproduction number using a spatially explicit
-branching process model.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="spatial_project.html">spatial_project()</a></code> </p>
-        </td>
-        <td><p>Project future incidence</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="summarise_projections.html">summarise_projections()</a></code> </p>
-        </td>
-        <td><p>Summarise projections across simulations</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>output from <code>spatial_project</code> function</p></td>
+    </tr>
+    <tr>
+      <th>funs</th>
+      <td><p>a list of summary functions to be applied.
+It is the user's responsibility to ensure that the functions
+are valid and can be applied to a vector. Defaults to
+quantile, min, max, mean and sd.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Additional arguments for funs, e.g. na.rm, probs</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A list of the same length as that of the supplied functions.
+Each element of the list is the result of applying the corresponding function
+across simulations for each day and each location.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>If you want to use multiple functions and  pass optional
+arguments other than na.rm, then use <code>sd2</code> rather than <code>sd</code>
+to estimate standard deviation. This is because <code>sd</code> does not
+accept optional arguments.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Sangeeta Bhatia, Anne Cori, Pierre Nouvellet</p>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

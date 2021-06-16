@@ -2,12 +2,25 @@
 % Please edit documentation in R/fit.R
 \name{make_rindex}
 \alias{make_rindex}
-\title{}
+\title{Prepare index matrix for Rt}
 \usage{
 make_rindex(rindex, ncol, nrow, change_at)
 }
-\value{
+\arguments{
+\item{rindex}{vector of integer indices}
 
+\item{ncol}{number of columns. Should be
+the same as the number of locations.}
+
+\item{nrow}{number of rows. Should be the same
+as the number of time steps.}
+
+\item{change_at}{A vector of integers indicating
+for each location, at which time step should R
+index change. Values are recycled.}
+}
+\value{
+matrix of R index
 }
 \description{
 Prepare index matrix for Rt
@@ -21,8 +34,8 @@ we want to estimate Rt over a 7 day window
 so that in all the model has 4 parameters for
 Rt (two for each location). The matrix looks
 like:
-#' \tabular{rr}{
-  \strong{1} \tab \strong{2} \cr
+ \tabular{rr}{
+  1 \tab 3\cr
   1 \tab 3\cr
   1 \tab 3\cr
   1 \tab 3\cr

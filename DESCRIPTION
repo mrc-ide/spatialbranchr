@@ -15,5 +15,5 @@ BugReports: https://github.com/sangeetabhatia03/spatialbranchr/issues
 Suggests: 
     knitr,
     rmarkdown
-VignetteBuilder: knitr
+VignetteBuilder: rmarkdown
 RoxygenNote: 7.1.1

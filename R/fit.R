@@ -8,8 +8,8 @@
 ##' so that in all the model has 4 parameters for
 ##' Rt (two for each location). The matrix looks
 ##' like:
-##' #' \tabular{rr}{
-##'   \strong{1} \tab \strong{2} \cr
+##'  \tabular{rr}{
+##'   1 \tab 3\cr
 ##'   1 \tab 3\cr
 ##'   1 \tab 3\cr
 ##'   1 \tab 3\cr
@@ -30,12 +30,17 @@
 ##' Similarly R[ncol + 1: (2 * ncol)] will be inserted from
 ##' change_at[1] + 1 to row_indices[2] and so on.
 ##'
-##' @title
-##' @param R
-##' @param ncol
-##' @param nrow
-##' @param change_at
-##' @return
+##'
+##' @param rindex vector of integer indices
+##' @param ncol number of columns. Should be
+##' the same as the number of locations.
+##' @param nrow number of rows. Should be the same
+##' as the number of time steps.
+##' @param change_at A vector of integers indicating
+##' for each location, at which time step should R
+##' index change. Values are recycled.
+##' @return matrix of R index
+##' @export
 ##' @examples
 ##' make_rindex(c(1, 2, 3), 3, 4, c(4))
 ##' make_rindex(c(1, 2, 3), 1, 9, c(5, 7))

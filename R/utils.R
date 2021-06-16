@@ -40,6 +40,7 @@ as_dataframe <- function(x) {
 ##' @return numeric. standard deviation
 ##' @author Sangeeta Bhatia, Anne Cori, Pierre Nouvellet
 ##' @export
+##' @importFrom stats sd
 sd2 <- function(vec, ...) {
   ## sd pnly has one argument, na.rm. It does not have an optional arg
   if (! 'na.rm' %in% names(list(...))) return(sd(vec))
@@ -64,6 +65,7 @@ sd2 <- function(vec, ...) {
 ##' accept optional arguments.
 ##' @author Sangeeta Bhatia, Anne Cori, Pierre Nouvellet
 ##' @export
+##' @importFrom stats quantile
 summarise_projections <- function(x,
                                   funs = c(`quantile` = quantile,
                                            `min` = min, `max` = max,

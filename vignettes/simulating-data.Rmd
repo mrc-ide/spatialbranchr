@@ -3,7 +3,7 @@ title: "Simulating outbreaks under a spatially explicit branching process"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{simulating-data}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{rmarkdown::render}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -15,8 +15,10 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(spatialbranchr)
+library(EpiEstim)
 library(ggplot2)
+library(MASS)
+library(spatialbranchr)
 library(tidyr)
 ```
 
