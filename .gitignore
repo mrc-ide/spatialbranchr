@@ -4,3 +4,7 @@
 inst/doc
 doc
 Meta
+
+*.so
+
+*.o

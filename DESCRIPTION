@@ -16,7 +16,7 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: rmarkdown
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 Biarch: true
 Depends: 
     R (>= 3.4.0)

@@ -39,8 +39,8 @@
 ##' @return matrix of R index
 ##' @export
 ##' @examples
-##' make_rindex(c(1, 2, 3), 3, 4, c(4))
-##' make_rindex(c(1, 2, 3), 1, 9, c(5, 7))
+##' make_rindex(7, 2, 14)
+##' make_rindex(4, 2, 14)
 ##' @author Sangeeta Bhatia, Anne Cori, Pierre Nouvellet
 make_rindex <- function(window, nloc, T) {
   change_at <- window + 1
@@ -78,6 +78,7 @@ make_rindex <- function(window, nloc, T) {
 ##' priors <- spatial_priors()
 ##' priors$gamma <- 2
 ##' @author Sangeeta Bhatia
+##' @export
 spatial_priors <- function() {
   list(
     prior_mean = 1, prior_std = 1, gamma = 1.5
