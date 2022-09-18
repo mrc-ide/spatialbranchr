@@ -28,9 +28,9 @@ data {
   int <lower = 1> T; // Time points
   int <lower = 1> N; // Number of locations
   int <lower = 0>  I[T, N];
-  row_vector[T + 1]    SI;
+  row_vector[T + 1] SI;
   int <lower = 0> rindex[T, N];
-  int num_Rjt ;
+  int num_Rjt;
   real population[N];
   real dist_mat[N, N];
   real alpha;
@@ -40,7 +40,7 @@ data {
   real prior_std;
   int zero_incid; // number of countries with zero incidence
   int zero_idx[zero_incid]; // indices of places with 0 incidence.
- real pmovement[N, N];
+  real pmovement[N, N];
 }
 
 parameters {
@@ -51,7 +51,7 @@ model {
 
   real flow[N, N];
   real row_total;
-  real a = ( prior_mean / prior_std)^2;
+  real a = (prior_mean / prior_std)^2;
   real b = prior_mean / ( prior_std ^ 2);
   R ~ gamma(a, b);  
 // For a given value of gamma, first calculate

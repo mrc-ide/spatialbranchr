@@ -38,8 +38,8 @@ data {
   real K;
   real prior_mean;
   real prior_std;
-  int zero_incid; // number of countries with zero incidence
-  int zero_idx[zero_incid]; // indices of places with 0 incidence.
+  //int zero_incid; // number of countries with zero incidence
+  //int zero_idx[zero_incid]; // indices of places with 0 incidence.
 }
 
 parameters {
@@ -99,9 +99,9 @@ model {
         real tmp = 0;
 	// If i is index of a place with 0 incidence
 	// skip this multiplication
-	if(r_in(i, zero_idx)) {
-	  continue;
-	}  
+	//if(r_in(i, zero_idx)) {
+	//  continue;
+	//}  
 
         for( s in 1:t){
 	  tmp = tmp + I[ s, i] * SI[ t - s + 1];

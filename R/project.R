@@ -50,8 +50,7 @@ spatial_project <- function(x, R, si, pmovement, n_sim, n_days,
   }
   if (nrow(R) != nrow(x)) {
     if (nrow(R) != 1) {
-      stop("R should be a either a 1 X N or T X N
-                  matrix.")
+      stop("R should be a either a 1 X N or T X N matrix.")
     }
   }
 

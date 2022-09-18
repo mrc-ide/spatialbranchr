@@ -26,13 +26,13 @@
 ##'   2 \tab 4
 ##' }
 ##' The columns index the locations and the rows index the time points.
-##' Given a vector rindex return a nrow * ncol matrix where
-##' rindex[1:ncol] will be inserted in rows 1 to change_at[1].
-##' Similarly rindex[ncol + 1: (2 * ncol)] will be inserted from
-##' change_at[1] + 1 to row_indices[2] and so on.
 ##'
 ##'
-##' @param window
+##'
+##'
+##'
+##'
+##' @inheritParams spatial_estimater
 ##' @param nloc integer. Number of locations.
 ##'
 ##' @param T integer. Number of time steps
@@ -61,6 +61,29 @@ make_rindex <- function(window, nloc, T) {
   )
 }
 
+##' Default priors for parameters of a spatially explicit branching process
+##' model
+##'
+##' The parameters are the effective reproduction number and the exponent on the
+##' distance in a gravity model, when both are being jointly estimated.
+##' Effective reproduction number is assumed to be Gamma distributed
+##' and therefore, its mean and standard deviation need to be specified.
+##' These are automataically translated into the shape and scale paramaters.
+##' When estimating only the effective reproduction number, the
+##' `gamma` component of the list is silently ignored.
+##'
+##' @return a list of default parameters for the priors.
+##' Values can then be manually be edited as in the examples below.
+##' @examples
+##' priors <- spatial_priors()
+##' priors$gamma <- 2
+##' @author Sangeeta Bhatia
+spatial_priors <- function() {
+  list(
+    prior_mean = 1, prior_std = 1, gamma = 1.5
+  )
+}
+
 ##' Estimate effective reproduction number using a spatially explicit
 ##' branching process model.
 ##'
@@ -69,38 +92,59 @@ make_rindex <- function(window, nloc, T) {
 ##' or (b) if pmovement is not NULL, estimates only the reproduction
 ##' number
 ##' @inheritParams spatial_project
-##'
-##' @param x
-##' @param si
-##' @param pmovement
 ##' @param window integer indicating the length of the window over
 ##' which Rt is to be estimated. Window length is assumed to be the same
 ##' for all locations. Default value is 7 i.e. Rt is estimated over
-##' a weekly window.
-##'
-##' @param moving TRUE/FALSE indicating whether estimation should happen
-##' over moving windows (TRUE) as in EpiEstim, or non-overlapping
-##' windows (FALSE). Defaults to FALSE. Setting this to true will increase
-##' the number of parameters in the model.
-##'
-##'
-##' @param priors
+##' a weekly window. Currently only non-overlapping windows
+##' are supported.
+##' @param pmovement either NULL or a N X N matrix where N is the
+##' number of locations. If pmovement is NULL, then this function
+##' jointly estimates the parameters of gravity and
+##' branching process models. The gravity model describes the
+##' population movement and the brancing process model describes the
+##' underlying transmission process.
+##' @param population a vector of length N giving the populations
+##' of each location. Silently ignored if pmovement is not NULL
+##' @param distance N X N matrix of the distances between the
+##' N locations. Silently ignored if pmovement is not NULL
+##' @param alpha gravity model paramater; exponent on source population
+##' @param beta gravity model paramater; exponent on destination population
+##' @param K gravity model paramater
+##' @param priors a list specifying priors for the model. To use the default priors,
+##' use the function `spatial_priors`
 ##' @param ...
 ##' @return
 ##' @author Sangeeta Bhatia
-spatial_estimater <- function(x, si, pmovement = NULL, window = 7L,
-                              moving = FALSE, model = "poisson",
+spatial_estimater <- function(x, si, window = 7L,
+                              ## Data needed for population movement
+                              pmovement = NULL,
+                              population,
+                              distance,
+                              alpha, beta, K,
+                              ## Transmission Model
+                              model = "poisson",
                               priors, ...) {
   ## TODO implement checks on data
   ## Prepare data for Stan
-  standata <- list(T = nrow(x), N = ncol(x), I = x, SI = si)
+  T <- nrow(x)
+  N <- ncol(x)
   ## Prepare index matrix for R
-  rindex <- make_rindex()
+  rindex <- make_rindex(window, N, T)
+
+  standata <- list(
+    T = T, N = N, I = x, SI = si, rindex = rindex,
+    num_Rjt = max(rindex),
+    population = population,
+    dist_mat = distance,
+    alpha = alpha,
+    beta = beta,
+    K = K,
+    prior_mean = priors$prior_mean,
+    prior_std = priors$prior_std
+  )
 
   if (is.null(pmovement)) {
-
-  } else {
-
+    out <- rstan::stan(stanmodels$lm, data = standata)
   }
-
+  out
 }
