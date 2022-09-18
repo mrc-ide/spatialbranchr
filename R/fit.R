@@ -1,11 +1,11 @@
 ##' Prepare index matrix for Rt
 ##' @details
-##' This is a utility function that prepared the
+##' This is a utility function that prepares the
 ##' index matrix for Rt estimation in Stan.
 ##' Say we have two locations and a time series
 ##' of cases over 14 days. For each location,
 ##' we want to estimate Rt over a 7 day window
-##' so that in all the model has 4 parameters for
+##' so that in all, the model has 4 parameters for
 ##' Rt (two for each location). The matrix looks
 ##' like:
 ##'  \tabular{rr}{
@@ -25,36 +25,42 @@
 ##'   2 \tab 4\cr
 ##'   2 \tab 4
 ##' }
-##' Given a vector R return a nrow * ncol matrix where
-##' R[1:ncol] will be inserted in rows 1 to change_at[1].
-##' Similarly R[ncol + 1: (2 * ncol)] will be inserted from
+##' The columns index the locations and the rows index the time points.
+##' Given a vector rindex return a nrow * ncol matrix where
+##' rindex[1:ncol] will be inserted in rows 1 to change_at[1].
+##' Similarly rindex[ncol + 1: (2 * ncol)] will be inserted from
 ##' change_at[1] + 1 to row_indices[2] and so on.
 ##'
 ##'
-##' @param rindex vector of integer indices
-##' @param ncol number of columns. Should be
-##' the same as the number of locations.
-##' @param nrow number of rows. Should be the same
-##' as the number of time steps.
-##' @param change_at A vector of integers indicating
-##' for each location, at which time step should R
-##' index change. Values are recycled.
+##' @param window
+##' @param nloc integer. Number of locations.
+##'
+##' @param T integer. Number of time steps
 ##' @return matrix of R index
 ##' @export
 ##' @examples
 ##' make_rindex(c(1, 2, 3), 3, 4, c(4))
 ##' make_rindex(c(1, 2, 3), 1, 9, c(5, 7))
 ##' @author Sangeeta Bhatia, Anne Cori, Pierre Nouvellet
-make_rindex <- function(rindex, ncol, nrow, change_at) {
-  split_at <- seq(from = 1, to = length(rindex), by = ncol)
+make_rindex <- function(window, nloc, T) {
+  change_at <- window + 1
+  ## Number of parameters if T is divisible by window length
+  ## (T/window) * nloc
+  if (T %% window == 0) {
+    npars <- (T / window) * nloc
+  } else {
+    ## Need one more
+    npars <- (floor(T / window) + 1) * nloc
+  }
+  rindex <- seq(from  = 1, to = npars)
+  split_at <- seq(from = 1, to = length(rindex), by = nloc)
   split_R  <- unname(split(rindex, cumsum(seq(rindex) %in%  split_at)))
-  num_rows <- diff(c(1, change_at, nrow + 1))
-
-  out <- mapply(rep, x = split_R, times = num_rows)
+  out <- mapply(rep, x = split_R, times = window)
   matrix(
-    unlist(out), byrow = T, ncol = ncol, nrow = nrow
+    unlist(out), byrow = TRUE, ncol = nloc, nrow = T
   )
 }
+
 ##' Estimate effective reproduction number using a spatially explicit
 ##' branching process model.
 ##'
@@ -67,25 +73,30 @@ make_rindex <- function(rindex, ncol, nrow, change_at) {
 ##' @param x
 ##' @param si
 ##' @param pmovement
-##' @param tstart A matrix of positive integers giving the starting
-##' index of the windows over which reproduction number is estimated.
+##' @param window integer indicating the length of the window over
+##' which Rt is to be estimated. Window length is assumed to be the same
+##' for all locations. Default value is 7 i.e. Rt is estimated over
+##' a weekly window.
 ##'
-##' @param tend A matrix of positive integers giving the indices of the
-##' endpoints of the windows over which reproduction number is estimated.
+##' @param moving TRUE/FALSE indicating whether estimation should happen
+##' over moving windows (TRUE) as in EpiEstim, or non-overlapping
+##' windows (FALSE). Defaults to FALSE. Setting this to true will increase
+##' the number of parameters in the model.
+##'
 ##'
 ##' @param priors
 ##' @param ...
 ##' @return
 ##' @author Sangeeta Bhatia
-spatial_estimater <- function(x, si, pmovement = NULL, tstart,
-                              tend, model = "poisson",
+spatial_estimater <- function(x, si, pmovement = NULL, window = 7L,
+                              moving = FALSE, model = "poisson",
                               priors, ...) {
   ## TODO implement checks on data
   ## Prepare data for Stan
-  standata <- list(
-    T = nrow(x), N = ncol(x),
-    I = x, SI = si
-  )
+  standata <- list(T = nrow(x), N = ncol(x), I = x, SI = si)
+  ## Prepare index matrix for R
+  rindex <- make_rindex()
+
   if (is.null(pmovement)) {
 
   } else {

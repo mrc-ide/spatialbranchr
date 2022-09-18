@@ -28,7 +28,7 @@ data {
   int <lower = 1> T; // Time points
   int <lower = 1> N; // Number of locations
   int <lower = 0>  I[T, N];
-  row_vector[T + 1]    SI;
+  row_vector[T + 1] SI;
   int <lower = 0> rindex[T, N];
   int num_Rjt ;
   real population[N];
