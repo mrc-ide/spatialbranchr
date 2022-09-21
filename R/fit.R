@@ -113,9 +113,10 @@ spatial_priors <- function() {
 ##' @param K gravity model paramater
 ##' @param priors a list specifying priors for the model. To use the default priors,
 ##' use the function `spatial_priors`
-##' @param ...
-##' @return
+##' @param ... Additional parameters to be passed to stan
+##' @return Fitted stan model, a  stanfit object
 ##' @author Sangeeta Bhatia
+##' @export
 spatial_estimater <- function(x, si, window = 7L,
                               ## Data needed for population movement
                               pmovement = NULL,
@@ -145,7 +146,7 @@ spatial_estimater <- function(x, si, window = 7L,
   )
 
   if (is.null(pmovement)) {
-    out <- rstan::stan(stanmodels$lm, data = standata)
+    out <- rstan::stan(stanmodels$lm, data = standata, ...)
   }
   out
 }
