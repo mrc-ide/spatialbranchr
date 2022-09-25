@@ -1,0 +1,31 @@
+---
+title: "Simulating outbreaks under a spatially explicit branching process"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{simulating-data}
+  %\VignetteEngine{rmarkdown::render}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(ollapse = TRUE, comment = "#>")
+```
+
+```{r setup}
+library(EpiEstim)
+library(ggplot2)
+library(MASS)
+library(spatialbranchr)
+library(tidyr)
+```
+
+We will data from the West African Ebola epidemic to jointly estimate
+the effective reproduction number and two parameters of the gravity
+model capturing human population movement - (a) pstay, which characterises the probability that an
+infectious individual will not move out of a spatial unit (here
+country) during their infectious period, and (b) gamma, which
+modulates the effect of the distance between two spatial units on the
+flow of populations between them.
+
+
+## Data

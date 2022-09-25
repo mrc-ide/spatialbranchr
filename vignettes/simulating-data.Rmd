@@ -8,10 +8,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+knitr::opts_chunk$set(ollapse = TRUE, comment = "#>")
 ```
 
 ```{r setup}
@@ -135,5 +132,5 @@ ggplot(tall) +
 
 ```{r}
 priors <- spatial_priors()
-out <- spatial_estimate(uni_movement, si, 7, puni, priors = priors)
+##out <- spatial_estimate(uni_movement, si, 7, puni, priors = priors)
 ```
