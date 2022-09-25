@@ -8,6 +8,8 @@
 #' @useDynLib spatialbranchr, .registration = TRUE
 #' @import methods
 #' @import Rcpp
+#' @import RcppParallel
+#' @import rstantools
 #' @importFrom rstan sampling stan
 #'
 #' @references

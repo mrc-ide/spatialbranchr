@@ -8,3 +8,5 @@ Meta
 *.so
 
 *.o
+
+man/

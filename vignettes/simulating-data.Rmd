@@ -132,3 +132,8 @@ ggplot(tall) +
   facet_wrap(~location, nrow = 3)
 
 ```
+
+```{r}
+priors <- spatial_priors()
+out <- spatial_estimate(uni_movement, si, 7, puni, priors = priors)
+```

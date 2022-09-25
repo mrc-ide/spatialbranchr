@@ -32,7 +32,7 @@
 ##'
 ##'
 ##'
-##' @inheritParams spatial_estimater
+##' @inheritParams spatial_estimate
 ##' @param nloc integer. Number of locations.
 ##'
 ##' @param T integer. Number of time steps
@@ -117,7 +117,7 @@ spatial_priors <- function() {
 ##' @return Fitted stan model, a  stanfit object
 ##' @author Sangeeta Bhatia
 ##' @export
-spatial_estimater <- function(x, si, window = 7L,
+spatial_estimate <- function(x, si, window = 7L,
                               ## Data needed for population movement
                               pmovement = NULL,
                               population,
@@ -136,17 +136,20 @@ spatial_estimater <- function(x, si, window = 7L,
   standata <- list(
     T = T, N = N, I = x, SI = si, rindex = rindex,
     num_Rjt = max(rindex),
-    population = population,
-    dist_mat = distance,
-    alpha = alpha,
-    beta = beta,
-    K = K,
     prior_mean = priors$prior_mean,
     prior_std = priors$prior_std
   )
 
   if (is.null(pmovement)) {
-    out <- rstan::stan(stanmodels$lm, data = standata, ...)
+    standata$population <- population
+    standata$dist_mat <- distance
+    standata$alpha <- alpha
+    standata$beta <- beta
+    standata$K <- K
+    out <- rstan::stan(stanmodels$estimate_both, data = standata, ...)
+  } else {
+    standata$pmovement <- pmovement
+    out <- rstan::stan(stanmodels$estimate_rt, data = standata, ...)
   }
   out
 }
