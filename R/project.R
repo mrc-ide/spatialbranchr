@@ -16,8 +16,9 @@
 ##' and n_locations is the number of locations (i.e. the number of
 ##' columns in \code{x}). If \code{R} has only 1 row, the values will
 ##' be recycled.
-##' @param si A matrix of discretised serial intervals. They will
-##' usually be the same for each location.
+##' @param si A matrix of discretised serial interval, assumed to be the same
+##' same for all locations. These can be generated easily using the package EpiEstim.
+##' See vignettes for examples.
 ##' @param pmovement A n_locations X n_locations matrix of the
 ##' probability of movement between locations. Entry in row i, column j
 ##' is the probability that a case in i will move to j during their

@@ -127,12 +127,11 @@ spatial_estimate <- function(x, si, window = 7L,
                               model = "poisson",
                               priors, ...) {
   ## TODO implement checks on data
-  ## Prepare data for Stan
   T <- nrow(x)
   N <- ncol(x)
   ## Prepare index matrix for R
   rindex <- make_rindex(window, N, T)
-
+  ## Prepare data for Stan
   standata <- list(
     T = T, N = N, I = x, SI = si, rindex = rindex,
     num_Rjt = max(rindex),

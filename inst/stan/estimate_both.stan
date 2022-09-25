@@ -53,7 +53,7 @@ model {
   real flow[N, N];
   real row_total;
   real pmovement[N, N];
-  real a = ( prior_mean / prior_std)^2;
+  real a = (prior_mean / prior_std)^2;
   real b = prior_mean / ( prior_std ^ 2);
   R ~ gamma(a, b);  
 // For a given value of gamma, first calculate
@@ -85,8 +85,7 @@ model {
       if(r == c){
          pmovement[r, c] = pstay;
       } else {
-         pmovement[r, c] = flow[r, c] *
-	                   (1 - pstay);
+         pmovement[r, c] = flow[r, c] * (1 - pstay);
       }		   
     }
   }
