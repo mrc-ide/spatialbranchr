@@ -1,5 +1,5 @@
 ---
-title: "Simulating outbreaks under a spatially explicit branching process"
+title: "Jointly estimate effective reproduction number and gravity model parameters"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{simulating-data}
@@ -13,6 +13,7 @@ knitr::opts_chunk$set(ollapse = TRUE, comment = "#>")
 
 ```{r setup}
 library(EpiEstim)
+library(geosphere)
 library(ggplot2)
 library(MASS)
 library(spatialbranchr)
@@ -29,3 +30,26 @@ flow of populations between them.
 
 
 ## Data
+
+We will use 
+
+```{r}
+incid <- readr::read_csv("vignettes/promed_loglinear_wide_from_march_ghana_fixed.csv")
+## Get rid of dates column as we don't need it for fitting
+incid_raw <- incid[, -1]
+nloc <- ncol(incid_raw)
+centroids <- readr::read_csv("vignettes/all_african_centroids.csv")
+distances <- readRDS("vignettes/allafrica_distances.rds")
+si <- EpiEstim::discr_si(k = 0:35, mu = 6, sigma = 4)
+priors <- spatial_priors()
+
+cntrs <- c("SLE", "GIN", "LBR", "GHA", "NGA")
+x <- incid_raw[1:35, cntrs]
+pop <- centroids$Pop[centroids$ISO3 %in% cntrs]
+coords <- centroids[centroids$ISO3 %in% cntrs, c("Centroid_Lon", "Centroid_Lat")]
+dist <- distm(coords)
+out <- spatial_estimate(
+  x, si, 7, NULL, pop, dist, 1, 1, 1, "poisson", priors
+)
+
+```

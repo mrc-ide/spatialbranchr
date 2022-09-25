@@ -146,10 +146,10 @@ spatial_estimate <- function(x, si, window = 7L,
     standata$alpha <- alpha
     standata$beta <- beta
     standata$K <- K
-    out <- rstan::stan(stanmodels$estimate_both, data = standata, ...)
+    out <- rstan::sampling(stanmodels$estimate_both, data = standata, ...)
   } else {
     standata$pmovement <- pmovement
-    out <- rstan::stan(stanmodels$estimate_rt, data = standata, ...)
+    out <- rstan::sampling(stanmodels$estimate_rt, data = standata, ...)
   }
   out
 }
