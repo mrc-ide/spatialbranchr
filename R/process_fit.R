@@ -6,11 +6,12 @@
 ##'
 ##' @param fit stanfit object returned by `spatial_estimate`
 ##' @inheritParams spatial_project
+##' @inheritParams spatial_estimate
 ##' @return a list with the 3 elements: (1) a three-dimensional matrix
 ##' where the first dimension is time,
 ##' the second dimension is the number of spatial units, and the thirs dimesnion
 ##' is the desired number of samples from the posterior distributions of Rt; (2)
-##'
+##' @importFrom rstan extract
 ##' @author Sangeeta Bhatia
 ##' @export
 process_spatial_estimate <- function(fit, x, window, samples = 1000L) {
