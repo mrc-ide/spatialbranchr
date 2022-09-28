@@ -33,19 +33,19 @@ NULL
 #' @description
 #'
 #' This data set gives the latitudes and longitudes for the
-#' centroids of all countries. Also included are population
+#' centroids of all countries on the African mainland. Also included are population
 #' sizes. These data are needed to jointly estimate
 #' reproduction numbers and parameters of movement
 #' model in the spatially explicit brancing process
 #' model implemented in this package.
-#' @name promed_ebola
+#' @name metadata
 #' @docType data
-#' @format A dataframe consisting of 656 rows and 56 columns. The
-#' first column consists of dates and the remaining 55 columns contain
-#' the incidence of Ebola cases for each country on the African mainland.
-#' Column names are the ISO3 country codes of countries.
+#' @format A dataframe consisting of 55 rows and 23 columns. The
+#' columns of interest are Centroid_Lon, Centroid_Lat, and Pop
 #'
-#' @source Bhatia, S., Lassmann, B., Cohn, E. et al. Using digital surveillance tools for near real-time mapping of the risk of infectious disease spread. npj Digit. Med. 4, 73 (2021). https://doi.org/10.1038/s41746-021-00442-3
+#'
+#'
+#' @source LandScan 2015 dataset grid
 #' @md
 #' @references
 #'

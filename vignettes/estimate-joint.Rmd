@@ -2,7 +2,7 @@
 title: "Jointly estimate effective reproduction number and gravity model parameters"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{simulating-data}
+  %\VignetteIndexEntry{jointly-estimate-rt-and-params}
   %\VignetteEngine{rmarkdown::render}
   %\VignetteEncoding{UTF-8}
 ---
@@ -34,12 +34,13 @@ flow of populations between them.
 We will use 
 
 ```{r}
-incid <- readr::read_csv("vignettes/promed_loglinear_wide_from_march_ghana_fixed.csv")
+data("promed_ebola")
+data("metadata")
+incid <- promed_ebola
 ## Get rid of dates column as we don't need it for fitting
 incid_raw <- incid[, -1]
 nloc <- ncol(incid_raw)
-centroids <- readr::read_csv("vignettes/all_african_centroids.csv")
-distances <- readRDS("vignettes/allafrica_distances.rds")
+centroids <- metadata
 si <- EpiEstim::discr_si(k = 0:35, mu = 6, sigma = 4)
 priors <- spatial_priors()
 
@@ -48,8 +49,18 @@ x <- incid_raw[1:35, cntrs]
 pop <- centroids$Pop[centroids$ISO3 %in% cntrs]
 coords <- centroids[centroids$ISO3 %in% cntrs, c("Centroid_Lon", "Centroid_Lat")]
 dist <- distm(coords)
+## This can take some time.
 out <- spatial_estimate(
-  x, si, 7, NULL, pop, dist, 1, 1, 1, "poisson", priors
+  x, si, window = 7L, NULL, pop, dist, 1, 1, 1, "poisson", priors, iter = 5000, chains = 2
 )
 
 ```
+
+The object `out` now has the fitted model. You can check `ggmcmc` to
+check for convergence. Note that `spatialbranchr` does not carry out
+any convergence checks. As a final step, you might extract the
+variables from `out` into a more friendly format.
+
+```{r}
+processed <- process_spatial_estimate(out, x, window = 7L)
+````
