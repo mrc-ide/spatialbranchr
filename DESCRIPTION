@@ -10,9 +10,8 @@ Description: spatialbranchr implements a spatially explicit branching process mo
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/sangeetabhatia03/spatialbranchr,
-    https://mrc-ide.github.io/spatialbranchr/
-BugReports: https://github.com/sangeetabhatia03/spatialbranchr/issues
+URL: https://mrc-ide.github.io/spatialbranchr/
+BugReports: https://github.com/mrc-ide/spatialbranchr/issues
 Suggests: 
     knitr,
     rmarkdown,
