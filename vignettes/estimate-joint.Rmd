@@ -66,7 +66,7 @@ dist <- distm(coords)
 ## This can take some time. 120 seconds on my computer with small-ish
 ## numver of iterations
 out <- spatial_estimate(
-  x, si, window = 7L, NULL, pop, dist, 1, 1, 1, "poisson", priors, iter = 5000, chains = 2
+  x, si, window = 7L, NULL, pop, dist, 1, 1, 1, "poisson", priors, iter = 2000, chains = 2
 )
 ```
 
