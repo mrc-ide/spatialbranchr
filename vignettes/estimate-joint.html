@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Jointly estimate effective reproduction number and gravity model parameters</title>
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Jointly estimate effective reproduction number and gravity model parameters</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(EpiEstim)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(geosphere)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">library</span>(ggplot2)</a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw">library</span>(MASS)</a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="kw">library</span>(spatialbranchr)</a></code></pre></div>
+<pre><code>#&gt; Warning: replacing previous import &#39;Rcpp::LdFlags&#39; by &#39;RcppParallel::LdFlags&#39;
+#&gt; when loading &#39;spatialbranchr&#39;</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">library</span>(tidyr)</a></code></pre></div>
+<p>We will data from the West African Ebola epidemic to jointly estimate the effective reproduction number and two parameters of the gravity model capturing human population movement - (a) pstay, which characterises the probability that an infectious individual will not move out of a spatial unit (here country) during their infectious period, and (b) gamma, which modulates the effect of the distance between two spatial units on the flow of populations between them.</p>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>We will use data from the West African Ebola epidemic bundled with the package.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">data</span>(<span class="st">&quot;promed_ebola&quot;</span>)</a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="kw">data</span>(<span class="st">&quot;metadata&quot;</span>)</a>
+<a class="sourceLine" id="cb4-3" title="3">incid &lt;-<span class="st"> </span>promed_ebola</a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="co">## Get rid of dates column as we don&#39;t need it for fitting</span></a>
+<a class="sourceLine" id="cb4-5" title="5">incid_raw &lt;-<span class="st"> </span>incid[, <span class="dv">-1</span>]</a>
+<a class="sourceLine" id="cb4-6" title="6">nloc &lt;-<span class="st"> </span><span class="kw">ncol</span>(incid_raw)</a>
+<a class="sourceLine" id="cb4-7" title="7">centroids &lt;-<span class="st"> </span>metadata</a>
+<a class="sourceLine" id="cb4-8" title="8">si &lt;-<span class="st"> </span><span class="kw">discr_si</span>(<span class="dt">k =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">35</span>, <span class="dt">mu =</span> <span class="dv">6</span>, <span class="dt">sigma =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb4-9" title="9">priors &lt;-<span class="st"> </span><span class="kw">spatial_priors</span>()</a></code></pre></div>
+<p>For illustration, we will focus on a few countries instead of including all countries in the estimation, which can take a very long time to run.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="co">## countries of interest</span></a>
+<a class="sourceLine" id="cb5-2" title="2">cntrs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;SLE&quot;</span>, <span class="st">&quot;GIN&quot;</span>, <span class="st">&quot;LBR&quot;</span>, <span class="st">&quot;GHA&quot;</span>, <span class="st">&quot;NGA&quot;</span>)</a></code></pre></div>
+<p>` The data set has more than 600 rows (each row is a day). We will estimate the model parameters using the first 35 days of data.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">x &lt;-<span class="st"> </span>incid_raw[<span class="dv">1</span><span class="op">:</span><span class="dv">35</span>, cntrs]</a>
+<a class="sourceLine" id="cb6-2" title="2">pop &lt;-<span class="st"> </span>centroids<span class="op">$</span>Pop[centroids<span class="op">$</span>ISO3 <span class="op">%in%</span><span class="st"> </span>cntrs]</a>
+<a class="sourceLine" id="cb6-3" title="3">coords &lt;-<span class="st"> </span>centroids[centroids<span class="op">$</span>ISO3 <span class="op">%in%</span><span class="st"> </span>cntrs, <span class="kw">c</span>(<span class="st">&quot;Centroid_Lon&quot;</span>, <span class="st">&quot;Centroid_Lat&quot;</span>)]</a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="co">## Generate distance matrix from centroids using geosphere package</span></a>
+<a class="sourceLine" id="cb6-5" title="5">dist &lt;-<span class="st"> </span><span class="kw">distm</span>(coords)</a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="co">## This can take some time. 120 seconds on my computer with small-ish</span></a>
+<a class="sourceLine" id="cb6-7" title="7"><span class="co">## numver of iterations</span></a>
+<a class="sourceLine" id="cb6-8" title="8">out &lt;-<span class="st"> </span><span class="kw">spatial_estimate</span>(</a>
+<a class="sourceLine" id="cb6-9" title="9">  x, si, <span class="dt">window =</span> 7L, <span class="ot">NULL</span>, pop, dist, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="st">&quot;poisson&quot;</span>, priors, <span class="dt">iter =</span> <span class="dv">5000</span>, <span class="dt">chains =</span> <span class="dv">2</span></a>
+<a class="sourceLine" id="cb6-10" title="10">)</a></code></pre></div>
+<pre><code>#&gt; 
+#&gt; SAMPLING FOR MODEL &#39;estimate_both&#39; NOW (CHAIN 1).
+#&gt; Chain 1: 
+#&gt; Chain 1: Gradient evaluation took 0.002254 seconds
+#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 22.54 seconds.
+#&gt; Chain 1: Adjust your expectations accordingly!
+#&gt; Chain 1: 
+#&gt; Chain 1: 
+#&gt; Chain 1: Iteration:    1 / 5000 [  0%]  (Warmup)
+#&gt; Chain 1: Iteration:  500 / 5000 [ 10%]  (Warmup)
+#&gt; Chain 1: Iteration: 1000 / 5000 [ 20%]  (Warmup)
+#&gt; Chain 1: Iteration: 1500 / 5000 [ 30%]  (Warmup)
+#&gt; Chain 1: Iteration: 2000 / 5000 [ 40%]  (Warmup)
+#&gt; Chain 1: Iteration: 2500 / 5000 [ 50%]  (Warmup)
+#&gt; Chain 1: Iteration: 2501 / 5000 [ 50%]  (Sampling)
+#&gt; Chain 1: Iteration: 3000 / 5000 [ 60%]  (Sampling)
+#&gt; Chain 1: Iteration: 3500 / 5000 [ 70%]  (Sampling)
+#&gt; Chain 1: Iteration: 4000 / 5000 [ 80%]  (Sampling)
+#&gt; Chain 1: Iteration: 4500 / 5000 [ 90%]  (Sampling)
+#&gt; Chain 1: Iteration: 5000 / 5000 [100%]  (Sampling)
+#&gt; Chain 1: 
+#&gt; Chain 1:  Elapsed Time: 54.146 seconds (Warm-up)
+#&gt; Chain 1:                64.7055 seconds (Sampling)
+#&gt; Chain 1:                118.852 seconds (Total)
+#&gt; Chain 1: 
+#&gt; 
+#&gt; SAMPLING FOR MODEL &#39;estimate_both&#39; NOW (CHAIN 2).
+#&gt; Chain 2: 
+#&gt; Chain 2: Gradient evaluation took 0.001728 seconds
+#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 17.28 seconds.
+#&gt; Chain 2: Adjust your expectations accordingly!
+#&gt; Chain 2: 
+#&gt; Chain 2: 
+#&gt; Chain 2: Iteration:    1 / 5000 [  0%]  (Warmup)
+#&gt; Chain 2: Iteration:  500 / 5000 [ 10%]  (Warmup)
+#&gt; Chain 2: Iteration: 1000 / 5000 [ 20%]  (Warmup)
+#&gt; Chain 2: Iteration: 1500 / 5000 [ 30%]  (Warmup)
+#&gt; Chain 2: Iteration: 2000 / 5000 [ 40%]  (Warmup)
+#&gt; Chain 2: Iteration: 2500 / 5000 [ 50%]  (Warmup)
+#&gt; Chain 2: Iteration: 2501 / 5000 [ 50%]  (Sampling)
+#&gt; Chain 2: Iteration: 3000 / 5000 [ 60%]  (Sampling)
+#&gt; Chain 2: Iteration: 3500 / 5000 [ 70%]  (Sampling)
+#&gt; Chain 2: Iteration: 4000 / 5000 [ 80%]  (Sampling)
+#&gt; Chain 2: Iteration: 4500 / 5000 [ 90%]  (Sampling)
+#&gt; Chain 2: Iteration: 5000 / 5000 [100%]  (Sampling)
+#&gt; Chain 2: 
+#&gt; Chain 2:  Elapsed Time: 54.3897 seconds (Warm-up)
+#&gt; Chain 2:                54.9682 seconds (Sampling)
+#&gt; Chain 2:                109.358 seconds (Total)
+#&gt; Chain 2:</code></pre>
+<p>The object <code>out</code> now has the fitted model. You can check <code>ggmcmc</code> to check for convergence. Note that <code>spatialbranchr</code> does not carry out any convergence checks. As a final step, you might extract the variables from <code>out</code> into a more friendly format.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">processed &lt;-<span class="st"> </span><span class="kw">process_spatial_estimate</span>(out, x, <span class="dt">window =</span> 7L)</a></code></pre></div>
+<p>The first component of this list is three-dimensional array where the dimensions are time, space, and samples from the posterior ditribution of Rt. We can summarise these:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">rt &lt;-<span class="st"> </span>processed<span class="op">$</span>Rt</a>
+<a class="sourceLine" id="cb9-2" title="2">rt_summary &lt;-<span class="st"> </span><span class="kw">apply</span>(rt, <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), quantile, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.5</span>, <span class="fl">0.975</span>))</a></code></pre></div>
+<p>Since we have estimated a single Rt over a window for each location, the same samples have been “filled in” for each day over the window.</p>
+<p>We can similarly summarise the parameters gamma and ptsay. We can also use them to obtain a flow matrix which can then be used as input in <code>spatial_project</code>.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
