@@ -1,1 +1,4 @@
-destination: docs
+url: https://mrc-ide.github.io/spatialbranchr/
+template:
+  bootstrap: 5
+
