@@ -1,6 +1,6 @@
 Package: spatialbranchr
 Title: Spatially explicit branching process model
-Version: 0.0.0.9000
+Version: 1.0.0.0
 Authors@R: 
    c(person(given = "Pierre", family = "Nouvellet", role = "aut", email = "p.nouvellet@imperial.ac.uk"),
      person(given = "Anne", family = "cori", role = "aut", email = "a.cori@imperial.ac.uk"),
