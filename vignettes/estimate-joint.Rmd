@@ -9,6 +9,7 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(ollapse = TRUE, comment = "#>")
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 ```{r setup}
@@ -31,7 +32,7 @@ flow of populations between them.
 
 ## Data
 
-We will use 
+We will use data from the West African Ebola epidemic bundled with the package.
 
 ```{r}
 data("promed_ebola")
@@ -41,19 +42,32 @@ incid <- promed_ebola
 incid_raw <- incid[, -1]
 nloc <- ncol(incid_raw)
 centroids <- metadata
-si <- EpiEstim::discr_si(k = 0:35, mu = 6, sigma = 4)
+si <- discr_si(k = 0:35, mu = 6, sigma = 4)
 priors <- spatial_priors()
+```
+For illustration, we will focus on a few countries instead of
+including all countries in the estimation, which can take a very long
+time to run.
 
+```{r}
+## countries of interest
 cntrs <- c("SLE", "GIN", "LBR", "GHA", "NGA")
+```
+`
+The data set has more than 600 rows (each row is a day). We will
+estimate the model parameters using the first 35 days of data.
+
+```{r}
 x <- incid_raw[1:35, cntrs]
 pop <- centroids$Pop[centroids$ISO3 %in% cntrs]
 coords <- centroids[centroids$ISO3 %in% cntrs, c("Centroid_Lon", "Centroid_Lat")]
+## Generate distance matrix from centroids using geosphere package
 dist <- distm(coords)
-## This can take some time.
+## This can take some time. 120 seconds on my computer with small-ish
+## numver of iterations
 out <- spatial_estimate(
   x, si, window = 7L, NULL, pop, dist, 1, 1, 1, "poisson", priors, iter = 5000, chains = 2
 )
-
 ```
 
 The object `out` now has the fitted model. You can check `ggmcmc` to
@@ -61,6 +75,22 @@ check for convergence. Note that `spatialbranchr` does not carry out
 any convergence checks. As a final step, you might extract the
 variables from `out` into a more friendly format.
 
+
 ```{r}
 processed <- process_spatial_estimate(out, x, window = 7L)
-````
+```
+The first component of this list is three-dimensional array where the
+dimensions are time, space, and samples from the posterior ditribution
+of Rt. We can summarise these:
+
+```{r}
+rt <- processed$Rt
+rt_summary <- apply(rt, c(1, 2), quantile, probs = c(0.025, 0.5, 0.975))
+```  
+
+Since we have estimated a single Rt over a window for each location,
+the same samples have been "filled in" for each day over the window.
+
+We can similarly summarise the parameters gamma and ptsay. We can also
+use them to obtain a flow matrix which can then be used as input in
+`spatial_project`.

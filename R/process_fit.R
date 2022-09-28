@@ -37,18 +37,18 @@ process_spatial_estimate <- function(fit, x, window, samples = 1000L) {
       ## desired number of samples for this Rt from the extracted
       ## draws and fill out the array.
       index <- rindex[row, col]
-      out[row, col, ] <- list_of_draws[["R"]][index]
+      out[row, col, ] <- list_of_draws[["R"]][1:samples, index]
     }
   }
 
   if (! is.null(list_of_draws[["gamma"]])) {
-    gamma <- list_of_draws[["gamma"]]
+    gamma <- list_of_draws[["gamma"]][1:samples]
   } else {
     gamma <- NULL
   }
 
   if (! is.null(list_of_draws[["pstay"]])) {
-    pstay <- list_of_draws[["pstay"]]
+    pstay <- list_of_draws[["pstay"]][1:samples]
   } else {
     pstay <- NULL
   }
