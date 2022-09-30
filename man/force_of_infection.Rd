@@ -21,6 +21,9 @@ probability of movement between locations. Entry in row i, column j
 is the probability that a case in i will move to j during their
 infectious period.}
 }
+\value{
+vector; overall force of infection at each location.
+}
 \description{
 This function computes the force of infection at time t + 1 at
 locations 1, 2,....n

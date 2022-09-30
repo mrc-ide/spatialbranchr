@@ -5,6 +5,8 @@
 ##' parameters to a space-time matrix that is easier to interpret.
 ##'
 ##' @param fit stanfit object returned by `spatial_estimate`
+##' @param samples a non-negative integer giving the desired number of
+##' samples from the posterior distribution of each parameter.
 ##' @inheritParams spatial_project
 ##' @inheritParams spatial_estimate
 ##' @return a list with the 3 elements: (1) a three-dimensional matrix

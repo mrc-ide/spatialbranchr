@@ -18,7 +18,7 @@
 ##' probability of movement between locations. Entry in row i, column j
 ##' is the probability that a case in i will move to j during their
 ##' infectious period.
-##' @return
+##' @return vector; overall force of infection at each location.
 ##' @author Sangeeta Bhatia, Anne Cori, Pierre Nouvellet
 ##' @export
 force_of_infection <- function(x, r_t, ws, pmovement) {

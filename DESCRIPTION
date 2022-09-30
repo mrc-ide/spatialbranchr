@@ -16,7 +16,7 @@ Suggests:
     knitr,
     rmarkdown,
     testthat    
-VignetteBuilder: rmarkdown
+VignetteBuilder: knitr
 RoxygenNote: 7.2.1
 Biarch: true
 Depends: 

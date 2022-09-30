@@ -3,7 +3,7 @@ title: "Jointly estimate effective reproduction number and gravity model paramet
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{jointly-estimate-rt-and-params}
-  %\VignetteEngine{rmarkdown::render}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 

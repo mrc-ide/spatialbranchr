@@ -18,6 +18,9 @@ which Rt is to be estimated. Window length is assumed to be the same
 for all locations. Default value is 7 i.e. Rt is estimated over
 a weekly window. Currently only non-overlapping windows
 are supported.}
+
+\item{samples}{a non-negative integer giving the desired number of
+samples from the posterior distribution of each parameter.}
 }
 \value{
 a list with the 3 elements: (1) a three-dimensional matrix

@@ -70,6 +70,19 @@ estimates the reproduction number and the probability of movement,
 or (b) if pmovement is not NULL, estimates only the reproduction
 number
 }
+\examples{
+# Fake incidence matrix
+x <- rpois(14, 2)
+y <- rpois(14, 3)
+incid <- matrix(c(x, y), nrow = 14, ncol = 2)
+# Fake serial interval
+si <- c(0, 0.01, 0.02, 0.07, 0.12, 0.14, 0.15,
+        0.13, 0.11, 0.08, 0.06, 0.04, 0.03, 0.02, 0.02)
+pops <- c(1e6, 1e6)
+dist <- matrix(c(0, 1e3, 1e3, 0), nrow = 2)
+priors <- spatial_priors()
+spatial_estimate(incid, si, 7L, NULL, pops, dist, 1, 1, 1, "poisson", priors)
+}
 \author{
 Sangeeta Bhatia
 }

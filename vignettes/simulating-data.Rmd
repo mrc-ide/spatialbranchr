@@ -3,7 +3,7 @@ title: "Simulating outbreaks under a spatially explicit branching process"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{simulating-data}
-  %\VignetteEngine{rmarkdown::render}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
